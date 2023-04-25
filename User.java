@@ -7,11 +7,12 @@ public class User {
 
     private String logged;
 
-    public User(String email, String password){
-        this.email = email;
-        this.password = password;
-        this.logged = "yes";
+    public User(){
+        this.email = null;
+        this.password = null;
+        this.logged = "no";
     }
+
     public String getEmail(){
         return this.email;
     }
@@ -23,6 +24,8 @@ public class User {
         Scanner input = new Scanner(System.in);
         System.out.println("------Create Account-------");
         System.out.println("----------------------------");
+        System.out.print("Enter your name: ");
+        String name = input.nextLine();
         System.out.print("Enter your email: ");
         String email = input.nextLine();
         do {
@@ -32,7 +35,7 @@ public class User {
             String passwordCheck = input.nextLine();
             if (password.equals(passwordCheck)) {
                 System.out.println("Account created successfully!");
-                //save in file
+                //save in file email;password;name
                 break;
             } else {
                 System.out.println("Passwords do not match! Try again!!");
@@ -48,12 +51,15 @@ public class User {
         System.out.print("Enter your password: ");
         String password = input.nextLine();
         //check details from file
+        //if details found: logged = true?
+
     }
     public void isLogged(){
         this.logged="yes";
     }
 
     public void logout(){
+        //log user out?
         this.logged="no";
     }
 
