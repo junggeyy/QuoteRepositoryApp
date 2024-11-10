@@ -1,66 +1,53 @@
-import java.util.Scanner;
+import java.io.*;
+import java.nio.file.*;
 
 public class User {
     private String email;
-
     private String password;
+    private boolean logged;
+    public String userName = "";
 
-    private String logged;
-
-    public User(){
-        this.email = null;
-        this.password = null;
-        this.logged = "no";
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.logged = false;
     }
 
-    public String getEmail(){
-        return this.email;
-    }
-    public String getPassword(){
-        return this.password;
+    public void createAccount(String name) {
+        try {
+            String userRecord = email + ";" + password + ";" + name + "\n";
+            Files.write(Paths.get("csv/users.csv"), userRecord.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void createAccount(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("------Create Account-------");
-        System.out.println("----------------------------");
-        System.out.print("Enter your name: ");
-        String name = input.nextLine();
-        System.out.print("Enter your email: ");
-        String email = input.nextLine();
-        do {
-            System.out.print("Create your password: ");
-            String password = input.nextLine();
-            System.out.print("Enter your password again to confirm: ");
-            String passwordCheck = input.nextLine();
-            if (password.equals(passwordCheck)) {
-                System.out.println("Account created successfully!");
-                //save in file email;password;name
-                break;
-            } else {
-                System.out.println("Passwords do not match! Try again!!");
+    public boolean login() {
+        try (BufferedReader br = new BufferedReader(new FileReader("csv/users.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                if (values[0].equals(email) && values[1].equals(password)) {
+                    logged = true;
+                    userName = values[2];
+                    return true;
+                }
             }
-        }while(true);
-        System.out.println("----------------------------");
-    }
-    public static void login(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("-------Log in--------");
-        System.out.print("Enter your email: ");
-        String email = input.nextLine();
-        System.out.print("Enter your password: ");
-        String password = input.nextLine();
-        //check details from file
-        //if details found: logged = true?
-
-    }
-    public void isLogged(){
-        this.logged="yes";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
-    public void logout(){
-        //log user out?
-        this.logged="no";
+    public boolean isLogged() {
+        return logged;
     }
 
+    public void logout() {
+        logged = false;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 }
